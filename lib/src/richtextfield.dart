@@ -517,10 +517,9 @@ class RichTextField extends InteractiveObject {
         context
           ..font = rtf._cssFontStyle
           ..fillStyle = _color2rgb(rtf.color)
-          ..fillText(text, lm._x+offsetX, lm._y);
+          ..fillText(text, lm._x + offsetX, lm._y);
 
         tfWidth = context.measureText(text).width;
-        offsetX+=tfWidth;
 
         if(rtf.underline) {
           var lineWidth = (rtf.bold ? rtf.size / 10 : rtf.size / 20).ceil();
@@ -529,10 +528,12 @@ class RichTextField extends InteractiveObject {
           context
             ..lineWidth = lineWidth
             ..beginPath()
-            ..moveTo(lm.x, underlineY)
-            ..lineTo(lm.x + tfWidth, underlineY)
+            ..moveTo(lm.x + offsetX, underlineY)
+            ..lineTo(lm.x + offsetX + tfWidth, underlineY)
             ..stroke();
         }
+
+        offsetX+=tfWidth;
 
       }
 
