@@ -1,0 +1,10 @@
+name: stagexl_richtextfield
+version: 0.0.0
+authors:
+- Sašo Pompe
+- Alex Gann
+description: StageXL Package for RichTextField support.
+dependencies:
+  browser: any
+  stagexl:
+    git: https://github.com/bp74/StageXL.git
