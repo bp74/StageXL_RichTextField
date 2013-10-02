@@ -17,10 +17,7 @@ $RECYCLE.BIN/
 
 #Dart
 .DS_Store
-!packages/
-packages/*
-!packages/browser/
-
+packages
 .project
 pubspec.lock
 
