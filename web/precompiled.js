@@ -9239,7 +9239,7 @@ _RichFontStyleMetrics$: function(fontStyle) {
 
 RichTextField: {"": "InteractiveObject;_text,_textFormats,_autoSize,_wordWrap,_multiline,_background,_border,_backgroundColor,_borderColor,_maxChars,_width,_liblib6$_height,_textWidth,_textHeight,_textLineMetrics,_refreshPending,_cacheAsBitmap,_cacheAsBitmapCanvas,doubleClickEnabled,mouseEnabled,tabEnabled,tabIndex,_liblib4$_id,_x,_y,_pivotX,_pivotY,_scaleX,_scaleY,_skewX,_skewY,_rotation,_alpha,_visible,_off,_mask,_cache,_cacheRectangle,_cacheDebugBorder,_filters,_shadow,_compositeOperation,_liblib4$_name,_parent,_tmpMatrix,_transformationMatrixPrivate,_transformationMatrixRefresh,_eventStreams,_captureEventStreams",
   setFormat$3: function(setFormat, startIndex, endIndex) {
-    var format, t1, formatIterator, i, t2, formatInList, f1, f2;
+    var format, numFormats, i, t1, formatInList, f1, f2;
     format = setFormat.clone$0(setFormat);
     if (startIndex === 0 && endIndex === -1) {
       this._textFormats = [format];
@@ -9247,12 +9247,11 @@ RichTextField: {"": "InteractiveObject;_text,_textFormats,_autoSize,_wordWrap,_m
     }
     format.startIndex = startIndex;
     format.endIndex = endIndex === -1 ? this._text.length : endIndex;
-    t1 = this._textFormats;
-    formatIterator = P.List_List$from(t1, true, H.getRuntimeTypeArgument(t1, "JSArray", 0));
-    for (i = 0; t1 = formatIterator.length, t2 = this._textFormats, i < t1; ++i) {
-      if (i >= t2.length)
-        throw H.ioore(t2, i);
-      formatInList = t2[i];
+    numFormats = this._textFormats.length;
+    for (i = 0; t1 = this._textFormats, i < numFormats; ++i) {
+      if (i >= t1.length)
+        throw H.ioore(t1, i);
+      formatInList = t1[i];
       if (J.$lt$n(format.startIndex, formatInList.get$startIndex()))
         if (!(J.$gt$n(format.endIndex, formatInList.get$startIndex()) && J.$lt$n(format.endIndex, formatInList.get$endIndex()) && !J.$eq(formatInList.get$endIndex(), -1)))
           t1 = !J.$eq(format.endIndex, -1) && formatInList === -1;
@@ -9302,7 +9301,7 @@ RichTextField: {"": "InteractiveObject;_text,_textFormats,_autoSize,_wordWrap,_m
         }
       }
     }
-    t2.push(format);
+    t1.push(format);
     t1 = this._textFormats;
     H.IterableMixinWorkaround_sortList(t1, new A.RichTextField_setFormat_closure());
     this._refreshPending = (this._refreshPending | 2) >>> 0;

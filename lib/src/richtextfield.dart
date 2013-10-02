@@ -48,9 +48,9 @@ class RichTextField extends InteractiveObject {
 
     format.startIndex = startIndex;
     format.endIndex = endIndex==-1?text.length:endIndex;
-    List formatIterator = _textFormats.toList();
+    int numFormats = _textFormats.length;
 
-    for(var i = 0; i < formatIterator.length; i++)
+    for(var i = 0; i < numFormats; i++)
     {
       RichTextFormat formatInList = _textFormats[i];
       if(format.startIndex < formatInList.startIndex &&
