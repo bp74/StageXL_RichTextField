@@ -8,3 +8,4 @@ dependencies:
   browser: any
   stagexl:
     git: https://github.com/bp74/StageXL.git
+  xml: any
