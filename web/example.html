@@ -7,9 +7,18 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <h1>Stagexl RichTextField</h1>
+    <h1>Stagexl RichTextField <button id="reload">Click to Redraw</button></h1>
+    <textarea id="texttodraw" style="width:640px; height:360px">Some {b}bold{/b} text
+Now {i}italic{/i} text
+Can do {u}underlines{/u} and {o}overlines{/o}
+Even {s}strikethrough{/s} text
+Some {color=0xFF0000}red text{/color}
+{font=Georgia}Georgia{/font} on my mind
+{size=*2}Double{/size} and {size=-5}smaller{/size}
+I'm so {excited}excited, I just can't hide it!{/excited}
 
-    <canvas id="richtext" width="500" height="280"></canvas>
+Altogether {b}now, it is {u}so {i}easy{/i}{/u} to nest{/b} multiple {size=*1.5}tags!{/size}</textarea>
+    <canvas id="richtext" width="640" height="360"></canvas>
 
     <script type="application/dart" src="example.dart"></script>
     <script src="dart.js"></script>

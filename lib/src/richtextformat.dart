@@ -11,6 +11,8 @@ class RichTextFormat {
   bool bold;
   bool italic;
   bool underline;
+  bool strikethrough;
+  bool overline;
   String align;
 
   num topMargin;
@@ -28,6 +30,8 @@ class RichTextFormat {
     this.bold         : false,
     this.italic       : false,
     this.underline    : false,
+    this.strikethrough: false,
+    this.overline     : false,
     this.align        : "left",
     this.topMargin    : 0.0,
     this.bottomMargin : 0.0,
@@ -41,7 +45,7 @@ class RichTextFormat {
 
   RichTextFormat clone() {
     return new RichTextFormat(font, size, color, startIndex: startIndex, endIndex: endIndex,
-        bold: bold, italic: italic, underline: underline, align: align,
+        bold: bold, italic: italic, underline: underline, strikethrough: strikethrough, overline: overline, align: align,
         topMargin: topMargin, bottomMargin: bottomMargin, leftMargin: leftMargin, rightMargin: rightMargin,
         indent: indent, leading: leading);
   }

@@ -1,7 +1,7 @@
 library stagexl_richtextfield;
 
 import 'dart:html' as html;
-import 'dart:math';
+import 'dart:math' show min, max;
 import 'package:stagexl/stagexl.dart';
 
 import 'dart:html' show
