@@ -1,7 +1,7 @@
 StageXL RichTextField
 =====================
 
-Rich Text Field add-on package for StageXL - allows for multiple format ranges within a given text field.
+Rich Text Field add-on package for [StageXL](https://github.com/bp74/StageXL) - allows for multiple format ranges within a given text field.
 
 Usage
 -----
