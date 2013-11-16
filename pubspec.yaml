@@ -6,6 +6,5 @@ authors:
 description: StageXL Package for RichTextField support.
 dependencies:
   browser: any
-  stagexl:
-    git: https://github.com/bp74/StageXL.git
+  stagexl: any
   xml: any
