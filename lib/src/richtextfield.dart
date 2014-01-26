@@ -28,6 +28,7 @@ class RichTextField extends InteractiveObject {
   int _refreshPending = 3;   // bit 0: textLineMetrics, bit 1: cache
   bool _cacheAsBitmap = true;
   CanvasElement _cacheAsBitmapCanvas;
+  RenderTexture _renderTexture;
 
   //-------------------------------------------------------------------------------------------------
 
@@ -183,6 +184,7 @@ class RichTextField extends InteractiveObject {
 
   //-------------------------------------------------------------------------------------------------
 
+  RenderTexture get renderTexture => _renderTexture;
   String get text => _text;
   String get rawText => _rawText;
   int get textColor => _textFormats[0].color;
@@ -359,15 +361,21 @@ class RichTextField extends InteractiveObject {
     _refreshCache();
 
     // draw text
+    
+    var renderContext = renderState.renderContext;
 
-    var renderContext = renderState.context;
-
-    if (_cacheAsBitmap) {
-      var canvas = _cacheAsBitmapCanvas;
-      if (canvas != null) renderContext.drawImageScaled(canvas, 0.0, 0.0, _width, _height);
+    if (_cacheAsBitmap || renderContext is! RenderContextCanvas) {
+      _refreshCache();
+      renderState.renderQuad(_renderTexture.quad);
     } else {
-      _renderText(renderContext);
+      var renderContextCanvas = renderState.renderContext as RenderContextCanvas;
+      var context = renderContextCanvas.rawContext;
+      var matrix = renderState.globalMatrix;
+      context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+      context.globalAlpha = renderState.globalAlpha;
+      _renderText(renderContextCanvas.rawContext);
     }
+
 
   }
 
@@ -570,31 +578,23 @@ class RichTextField extends InteractiveObject {
       _refreshPending &= 255 - 2;
     }
 
-    if (_cacheAsBitmap == false) {
-      return;
+    var pixelRatio = Stage.autoHiDpi ? _devicePixelRatio : 1.0;
+    var width = max(1, _width).ceil();
+    var height =  max(1, _height).ceil();
+
+    if (_renderTexture == null) {
+      _renderTexture = new RenderTexture(width, height, true, Color.Transparent, pixelRatio);
+    } else {
+      _renderTexture.resize(width, height);
     }
 
-    var pixelRatio = (Stage.autoHiDpi ? _devicePixelRatio : 1.0) / _backingStorePixelRatio;
-    var canvasWidth = (_width * pixelRatio).ceil();
-    var canvasHeight =  (_height * pixelRatio).ceil();
-
-    if (canvasWidth <= 0 || canvasHeight <= 0) {
-      _cacheAsBitmapCanvas = null;
-      return;
-    }
-
-    if (_cacheAsBitmapCanvas == null) {
-      _cacheAsBitmapCanvas = new CanvasElement(width: canvasWidth, height: canvasHeight);
-    }
-
-    if (_cacheAsBitmapCanvas.width != canvasWidth) _cacheAsBitmapCanvas.width = canvasWidth;
-    if (_cacheAsBitmapCanvas.height != canvasHeight) _cacheAsBitmapCanvas.height = canvasHeight;
-
-    var context = _cacheAsBitmapCanvas.context2D;
-    context.setTransform(pixelRatio, 0.0, 0.0, pixelRatio, 0.0, 0.0);
+    var matrix = _renderTexture.quad.drawMatrix;
+    var context = _renderTexture.canvas.context2D;
+    context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
     context.clearRect(0, 0, _width, _height);
 
     _renderText(context);
+    _renderTexture.update();
   }
 
   //-------------------------------------------------------------------------------------------------
