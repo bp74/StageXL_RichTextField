@@ -23,7 +23,6 @@ void main() {
   render.addStage(stage);
   stage.addChild(rtf);
 
-
   reload.onClick.listen((e) {
     rtf.text = textarea.value;
   });

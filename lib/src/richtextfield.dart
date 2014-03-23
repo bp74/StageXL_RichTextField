@@ -420,7 +420,7 @@ class RichTextField extends InteractiveObject {
     var lineIndent = 0;
 
     RichTextFormat firstFormat = _textFormats[0];
-
+    num strokeWidth = _ensureNum(defaultTextFormat.strokeWidth);
     var textFormatIndent = _ensureNum(firstFormat.indent);
     var textFormatLeftMargin = _ensureNum(firstFormat.leftMargin);
     var textFormatRightMargin = _ensureNum(firstFormat.rightMargin);
@@ -525,8 +525,11 @@ class RichTextField extends InteractiveObject {
         case TextFormatAlign.END:
           offsetX += (availableWidth - width);
           break;
+        default:
+          offsetX += strokeWidth;
       }
 
+      offsetY += strokeWidth;
       textLineMetrics._x = offsetX;
       textLineMetrics._y = offsetY;
       textLineMetrics._width = width;
@@ -539,6 +542,9 @@ class RichTextField extends InteractiveObject {
       _textWidth = max(_textWidth, textFormatLeftMargin + indent + width + textFormatRightMargin);
       _textHeight = offsetY + fontStyleMetricsDescent + textFormatBottomMargin;
     }
+    
+    _textWidth += strokeWidth * 2;
+    _textHeight += strokeWidth * 2;
 
     //-----------------------------
     // calculate autoSize
@@ -626,11 +632,28 @@ class RichTextField extends InteractiveObject {
 
         String text = lm._text.substring(max(rtf.startIndex-startIndex,0), min(rtfEndIndex, lm._text.length));
 
-        context
-          ..font = rtf._cssFontStyle
-          ..fillStyle = _color2rgb(rtf.color)
-          ..fillText(text, lm._x + offsetX, lm._y);
+        context.font = rtf._cssFontStyle;
 
+        if(rtf.fillGradient != null) {
+          context.fillStyle = rtf.fillGradient.getCanvasGradient(context);
+        } else {
+          context.fillStyle = _color2rgb(rtf.color);
+        }
+             
+        if(rtf.strokeWidth > 0) {
+          context.lineWidth = rtf.strokeWidth * 2;
+          context.strokeStyle = _color2rgb(rtf.strokeColor);
+           
+          for(RichTextLineMetrics lm in _textLineMetrics) {
+            context.strokeText(text, lm.x, lm.y);
+            }
+        }
+             
+        context
+          ..strokeStyle = _color2rgb(rtf.color)
+          ..fillText(text, lm._x + offsetX, lm._y);
+        
+        
         tfWidth = context.measureText(text).width;
 
         if(rtf.underline || rtf.strikethrough || rtf.overline) {
