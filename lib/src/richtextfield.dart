@@ -80,7 +80,7 @@ class RichTextField extends InteractiveObject {
       else if(add.startIndex > cur.startIndex &&
           ((add.endIndex < cur.endIndex && add.endIndex != -1) || (add.endIndex != -1 && cur.endIndex == -1))) {
         RichTextFormat f1 = cur.clone();
-        RichTextFormat f2 = cur.clone();
+        RichTextFormat f2 = f1.clone();
 
         f1.startIndex = cur.startIndex;
         f1.endIndex = add.startIndex - 1;
@@ -100,11 +100,14 @@ class RichTextField extends InteractiveObject {
         _textFormats.removeAt(i);
         _textFormats.add(add);
       }
+      
     }
 
     _textFormats.sort((a,b) => a.startIndex-b.startIndex);
 
     _refreshPending |= 2;
+    
+    return;
 
   }
 
@@ -141,6 +144,7 @@ class RichTextField extends InteractiveObject {
     this._text = newtext;
 
     RichTextFormat base;
+    
     formatRanges.forEach((range) {
       //get known format for starting position
       base = getFormatAt(range[2]).clone();
@@ -158,9 +162,8 @@ class RichTextField extends InteractiveObject {
           if(presets.containsKey(range[0])) base = presets[range[0]];
           break;
       }
-
+  
       setFormat(base, range[2], range[3]);
-
     });
 
   }
@@ -491,7 +494,11 @@ class RichTextField extends InteractiveObject {
       var lineIndex = textLineMetrics._textIndex;
       var lineEndIndex = textLineMetrics._text.length + lineIndex;
       var textFormatSize = 0;
-      RichTextFormat lineFormat = _textFormats.firstWhere((f) => lineIndex>=f.startIndex && (lineIndex<=f.endIndex || f.endIndex == -1));
+      var lineFormat = _textFormats.firstWhere((f) => lineIndex>=f.startIndex && (lineIndex<=f.endIndex || f.endIndex == -1),
+          orElse: () => null);
+      
+      if(lineFormat == null) continue; 
+      
       //textFormatSize must be the max text size enountered on that line
       for(RichTextFormat rtf in _textFormats.where((f) => !(f.startIndex > lineEndIndex || (f.endIndex < lineIndex && f.endIndex != -1)))) {
         textFormatSize = max(_ensureNum(rtf.size),textFormatSize);
