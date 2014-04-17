@@ -80,7 +80,7 @@ class RichTextField extends InteractiveObject {
       else if(add.startIndex > cur.startIndex &&
           ((add.endIndex < cur.endIndex && add.endIndex != -1) || (add.endIndex != -1 && cur.endIndex == -1))) {
         RichTextFormat f1 = cur.clone();
-        RichTextFormat f2 = f1.clone();
+        RichTextFormat f2 = cur.clone();
 
         f1.startIndex = cur.startIndex;
         f1.endIndex = add.startIndex - 1;
