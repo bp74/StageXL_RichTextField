@@ -6,4 +6,4 @@ homepage: https://github.com/realbluesky/StageXL_RichTextField
 documentation: https://github.com/realbluesky/StageXL_RichTextField
 dependencies:
   browser: '>=0.9.0 <0.11.0'
-  stagexl: '>=0.9.0 <0.11.0'
+  stagexl: '>=0.9.0 <0.12.0'
