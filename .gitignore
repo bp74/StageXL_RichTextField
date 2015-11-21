@@ -1,27 +1,8 @@
-#############
-## Windows detritus
-#############
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Mac crap
+.buildlog
 .DS_Store
-
-#Dart
-.DS_Store
+.idea
+.packages
+.pub/
+build/
 packages
-.project
 pubspec.lock
-
-#TexturePacker
-*.tps
-#source images for sprite sheets
-source
