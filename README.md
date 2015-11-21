@@ -80,7 +80,7 @@ RichTextField rtf = new RichTextField()
     ..presets['excited'] = format.clone()..bold=true..italic=true..size=30..color=0xFF00FF;
 ```
 
-### Try out the [sandbox example](https://rawgithub.com/realbluesky/StageXL_RichTextField/master/web/example.html) to get better acquainted.
+### Try out the [sandbox example](https://rawgit.com/realbluesky/StageXL_RichTextField/master/build/web/example.html) to get better acquainted.
 
 Roll your own parser
 --------------------
