@@ -27,8 +27,9 @@ class RichTextField extends InteractiveObject {
 
   int _refreshPending = 3;   // bit 0: textLineMetrics, bit 1: cache
   bool _cacheAsBitmap = true;
-  CanvasElement _cacheAsBitmapCanvas;
+
   RenderTexture _renderTexture;
+  RenderTextureQuad _renderTextureQuad;
 
   //-------------------------------------------------------------------------------------------------
 
@@ -342,44 +343,44 @@ class RichTextField extends InteractiveObject {
   //-------------------------------------------------------------------------------------------------
   //-------------------------------------------------------------------------------------------------
 
-  Rectangle getBoundsTransformed(Matrix matrix, [Rectangle returnRectangle]) {
-    return _getBoundsTransformedHelper(matrix, _width, _height, returnRectangle);
+  @override
+  Rectangle<num> get bounds {
+    return new Rectangle<num>(0.0, 0.0, width, height);
   }
 
-  //-------------------------------------------------------------------------------------------------
-
+  @override
   DisplayObject hitTestInput(num localX, num localY) {
-
-    if (localX >= 0 && localY >= 0 && localX < _width && localY < _height)
-      return this;
-
-    return null;
+    if (localX < 0 || localX >= width) return null;
+    if (localY < 0 || localY >= height) return null;
+    return this;
   }
 
-  //-------------------------------------------------------------------------------------------------
-
+  @override
   void render(RenderState renderState) {
 
     _refreshTextLineMetrics();
-    _refreshCache();
 
-    // draw text
-    
-    var renderContext = renderState.renderContext;
-
-    if (_cacheAsBitmap || renderContext is! RenderContextCanvas) {
-      _refreshCache();
-      renderState.renderQuad(_renderTexture.quad);
+    if (renderState.renderContext is RenderContextWebGL || _cacheAsBitmap ) {
+      _refreshCache(renderState.globalMatrix);
+      renderState.renderTextureQuad(_renderTextureQuad);
     } else {
-      var renderContextCanvas = renderState.renderContext as RenderContextCanvas;
-      var context = renderContextCanvas.rawContext;
-      var matrix = renderState.globalMatrix;
-      context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-      context.globalAlpha = renderState.globalAlpha;
+      RenderContextCanvas renderContextCanvas = renderState.renderContext;
+      renderContextCanvas.setTransform(renderState.globalMatrix);
+      renderContextCanvas.setAlpha(renderState.globalAlpha);
       _renderText(renderContextCanvas.rawContext);
     }
+  }
 
+  @override
+  void renderFiltered(RenderState renderState) {
 
+    if (renderState.renderContext is RenderContextWebGL || _cacheAsBitmap) {
+      _refreshTextLineMetrics();
+      _refreshCache(renderState.globalMatrix);
+      renderState.renderTextureQuadFiltered(_renderTextureQuad, this.filters);
+    } else {
+      super.renderFiltered(renderState);
+    }
   }
 
   //-------------------------------------------------------------------------------------------------
@@ -583,7 +584,7 @@ class RichTextField extends InteractiveObject {
 
   //-------------------------------------------------------------------------------------------------
 
-  _refreshCache() {
+  _refreshCache(Matrix globalMatrix) {
 
     if ((_refreshPending & 2) == 0) {
       return;
@@ -591,14 +592,16 @@ class RichTextField extends InteractiveObject {
       _refreshPending &= 255 - 2;
     }
 
-    var pixelRatio = Stage.autoHiDpi ? _devicePixelRatio : 1.0;
+    var pixelRatio = sqrt(globalMatrix.det.abs());
     var width = max(1, _width).ceil();
     var height =  max(1, _height).ceil();
 
     if (_renderTexture == null) {
-      _renderTexture = new RenderTexture(width, height, true, Color.Transparent, pixelRatio);
+      _renderTexture = new RenderTexture(width, height, Color.Transparent);
+      _renderTextureQuad = _renderTexture.quad.withPixelRatio(pixelRatio);
     } else {
       _renderTexture.resize(width, height);
+      _renderTextureQuad = _renderTexture.quad.withPixelRatio(pixelRatio);
     }
 
     var matrix = _renderTexture.quad.drawMatrix;
