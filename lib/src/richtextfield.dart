@@ -645,11 +645,11 @@ class RichTextField extends InteractiveObject {
         context.font = rtf._cssFontStyle;
 
         if(rtf.fillGradient != null) {
-          context.fillStyle = rtf.fillGradient.getCanvasGradient(context);
+          context.fillStyle = _getCanvasGradient(context, rtf.fillGradient);
         } else {
           context.fillStyle = _color2rgb(rtf.color);
         }
-             
+
         if(rtf.strokeWidth > 0) {
           context.lineWidth = rtf.strokeWidth * 2;
           context.strokeStyle = _color2rgb(rtf.strokeColor);
