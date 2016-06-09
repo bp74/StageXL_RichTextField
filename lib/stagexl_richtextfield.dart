@@ -2,11 +2,8 @@ library stagexl_richtextfield;
 
 import 'dart:html' as html;
 import 'dart:math' show min, max, sqrt;
+import 'dart:html' show CanvasElement, CanvasRenderingContext2D, CanvasGradient;
 import 'package:stagexl/stagexl.dart';
-
-import 'dart:html' show
-CanvasElement, CanvasRenderingContext2D, CanvasImageSource,
-CanvasPattern, CanvasGradient, ImageData;
 
 part 'src/richfontstylemetrics.dart';
 part 'src/richtextfield.dart';
