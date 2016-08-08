@@ -15,18 +15,17 @@ void main() {
       'Calibri, sans-serif', 25, 0x000000, align: TextFormatAlign.LEFT);
 
   RichTextFormat excited = format.clone()
-    ..bold=true
-    ..italic=true
-    ..size=30
-    ..color=0xFF00FF;
+    ..bold = true
+    ..italic = true
+    ..size = 30
+    ..color = 0xFF00FF;
 
-  RichTextField rtf = new RichTextField('',format)
+  RichTextField rtf = new RichTextField('', format)
     ..presets['excited'] = excited
     ..text = textarea.value
     ..width = stage.sourceWidth
     ..height = stage.sourceHeight
-    ..wordWrap = true
-    ..y = 0;
+    ..wordWrap = true;
 
   render.addStage(stage);
   stage.addChild(rtf);
