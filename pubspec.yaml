@@ -7,6 +7,12 @@ author:
 description: StageXL Extension for RichTextField support.
 homepage: https://github.com/bp74/StageXL_RichTextField
 documentation: https://github.com/bp74/StageXL_RichTextField
+
 dependencies:
   browser: '>=0.10.0 <0.11.0'
   stagexl: '>=0.13.1 <0.14.0'
+
+transformers:
+- $dart2js:
+    commandLineOptions: ["--trust-type-annotations", "--trust-primitives", "--dump-info"]
+    minify: true
