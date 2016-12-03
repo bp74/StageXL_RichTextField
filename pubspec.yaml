@@ -1,5 +1,5 @@
 name: stagexl_richtextfield
-version: 0.1.4
+version: 0.1.5
 authors:
 - Alex Gann <k.alexgann@gmail.com>
 - Bernhard Pichler <support@stagexl.org>
@@ -8,9 +8,12 @@ description: StageXL Extension for RichTextField support.
 homepage: https://github.com/bp74/StageXL_RichTextField
 documentation: https://github.com/bp74/StageXL_RichTextField
 
+environment:
+  sdk: '>=1.20.0 <2.0.0'
+
 dependencies:
-  browser: '>=0.10.0 <0.11.0'
-  stagexl: '>=0.13.1 <0.14.0'
+  browser: any
+  stagexl: '^1.0.0'
 
 transformers:
 - $dart2js:
