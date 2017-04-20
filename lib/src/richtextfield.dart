@@ -1,6 +1,6 @@
 part of stagexl_richtextfield;
 
-class RichTextField extends InteractiveObject {
+class RichTextField extends InteractiveObject implements TextField {
 
   String _text = "";
   String _rawText = "";
