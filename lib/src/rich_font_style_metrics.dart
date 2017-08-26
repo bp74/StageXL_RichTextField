@@ -49,7 +49,7 @@ class _RichFontStyleMetrics {
       this.descent = height - ascent;
 
     } catch (e) {
-
+      // ignore error
     } finally {
       div.remove();
     }

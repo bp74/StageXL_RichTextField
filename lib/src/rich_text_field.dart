@@ -2,6 +2,8 @@ part of stagexl_richtextfield;
 
 class RichTextField extends InteractiveObject {
 
+  RichTextParser parser = new DefaultRichTextParser();
+
   String _text = "";
   String _rawText = "";
   List<RichTextFormat> _textFormats = [new RichTextFormat("Arial", 12, 0x000000)];
@@ -23,7 +25,6 @@ class RichTextField extends InteractiveObject {
   num _textWidth = 0.0;
   num _textHeight = 0.0;
   final List<RichTextLineMetrics> _textLineMetrics = new List<RichTextLineMetrics>();
-  var parser;
 
   int _refreshPending = 3;   // bit 0: textLineMetrics, bit 1: cache
   bool _cacheAsBitmap = true;
@@ -34,16 +35,9 @@ class RichTextField extends InteractiveObject {
   //-------------------------------------------------------------------------------------------------
 
   RichTextField([String text = "", RichTextFormat textFormat, bool parse = true]) {
-
-    this.defaultTextFormat = (textFormat != null) ? textFormat : new RichTextFormat("Arial", 12, 0x000000);
+    this.defaultTextFormat = textFormat ?? new RichTextFormat("Arial", 12, 0x000000);
     this.parse = parse;
-    this.parser = defaultParser;
-    if(parse && text != "") {
-      this._rawText = this.text;
-      parser(text);
-    } else this.text = text;
-
-    this.onMouseDown.listen(_onMouseDown);
+    this.text = text;
   }
 
   //-------------------------------------------------------------------------------------------------
@@ -101,89 +95,12 @@ class RichTextField extends InteractiveObject {
         _textFormats.removeAt(i);
         _textFormats.add(add);
       }
-      
     }
 
     _textFormats.sort((a,b) => a.startIndex-b.startIndex);
-
     _refreshPending |= 2;
     
     return;
-
-  }
-
-  defaultParser(String rawtext) {
-    int pos = 0;
-    String action;
-    String newtext = '';
-    var arg;
-    List<List> formatRanges = [];
-    List split = rawtext.split('{');
-    split.forEach((chunk) {
-      List actText = chunk.split('}');
-      if(actText.length==1) { //text prior to first tag
-        newtext = newtext + actText[0];
-      } else { //get action
-        action = actText[0];
-        if(!action.startsWith('/')) { //opening a range
-          //check for argument
-          if(action.contains('=')) {
-            List actArg = action.split('=');
-            action = actArg[0];
-            arg = actArg[1];
-          }
-          formatRanges.add([action,arg,pos,-1]); //second+ appearance
-        } else { //closing a range
-          action = action.substring(1);
-          formatRanges.lastWhere((e) => e[3] == -1)[3] = pos-1; //get last unclosed range for that action
-        }
-        newtext = newtext + actText[1];
-      }
-      pos = newtext.length;
-    });
-
-    this._text = newtext;
-
-    RichTextFormat base;
-    
-    formatRanges.forEach((range) {
-      //get known format for starting position
-      base = getFormatAt(range[2]).clone();
-      //if format here ends before this one, make two
-      switch(range[0]) {
-        case 'b': base.bold = true; break;
-        case 'u': base.underline = true; break;
-        case 'i': base.italic = true; break;
-        case 's': base.strikethrough = true; break;
-        case 'o': base.overline = true; break;
-        case 'color': base.color = _applyTextTagArg(range[1], base.color).toInt(); break;
-        case 'size': base.size = _applyTextTagArg(range[1],base.size); break;
-        case 'font': base.font = range[1]; break;
-        default:
-          if(presets.containsKey(range[0])) base = presets[range[0]];
-          break;
-      }
-  
-      setFormat(base, range[2], range[3]);
-    });
-
-  }
-
-  num _applyTextTagArg(String arg, base) {
-    num result = 0;
-    if('+-*/'.contains(arg.substring(0, 1))) {
-      String op = arg.substring(0, 1);
-      result = arg.contains('x')?int.parse(arg.substring(1)):double.parse(arg.substring(1));
-      switch(op) {
-        case '+': result = base + result; break;
-        case '-': result = base - result; break;
-        case '*': result = base * result; break;
-        case '/': result = base / result; break;
-      }
-    } else result = arg.contains('x')?int.parse(arg):double.parse(arg);
-
-    return result;
-
   }
 
   //-------------------------------------------------------------------------------------------------
@@ -210,98 +127,106 @@ class RichTextField extends InteractiveObject {
 
   //-------------------------------------------------------------------------------------------------
 
-  void set width(num value) {
+  @override
+  set width(num value) {
     _width = value.toDouble();
     _refreshPending |= 3;
   }
 
-  void set height(num value) {
+  @override
+  set height(num value) {
     _height = value.toDouble();
     _refreshPending |= 3;
   }
 
-  void set text(String value) {
-    _text = value.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
-    _rawText = _text;
+  set text(String value) {
+    value = value.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
     if(parse && value != "") {
       _textFormats.removeRange(1, _textFormats.length);
       _textFormats[0].endIndex = -1;
-      parser(text);
+      _rawText = value;
+      _text = this.parser.parse(this, value);
+    } else {
+      _rawText = value;
+      _text = value;
     }
     _refreshPending |= 3;
   }
 
-  void set textColor(int value) {
+  set textColor(int value) {
     _textFormats[0].color = value;
     _refreshPending |= 2;
   }
 
-  void set defaultTextFormat(RichTextFormat value) {
+  set defaultTextFormat(RichTextFormat value) {
     _textFormats[0] = value.clone();
     _refreshPending |= 3;
   }
 
-  void set autoSize(String value) {
+  set autoSize(String value) {
     _autoSize = value;
     _refreshPending |= 3;
   }
 
-  void set wordWrap(bool value) {
+  set wordWrap(bool value) {
     _wordWrap = value;
     _refreshPending |= 3;
   }
 
-  void set multiline(bool value) {
+  set multiline(bool value) {
     _multiline = value;
     _refreshPending |= 3;
   }
 
-  void set parse(bool value) {
+  set parse(bool value) {
     _parse = value;
     _refreshPending |= 3;
   }
 
-  void set background(bool value) {
+  set background(bool value) {
     _background = value;
     _refreshPending |= 2;
   }
 
-  void set backgroundColor(int value) {
+  set backgroundColor(int value) {
     _backgroundColor = value;
     _refreshPending |= 2;
   }
 
-  void set border(bool value) {
+  set border(bool value) {
     _border = value;
     _refreshPending |= 2;
   }
 
-  void set borderColor(int value) {
+  set borderColor(int value) {
     _borderColor = value;
     _refreshPending |= 2;
   }
 
-  void set maxChars(int value) {
+  set maxChars(int value) {
     _maxChars = value;
   }
 
-  void set cacheAsBitmap(bool value) {
+  set cacheAsBitmap(bool value) {
     if (value) _refreshPending |= 2;
     _cacheAsBitmap = value;
   }
 
   //-------------------------------------------------------------------------------------------------
 
+  @override
   num get x {
     _refreshTextLineMetrics();
     return super.x;
   }
 
+  @override
   num get width {
     _refreshTextLineMetrics();
     return _width;
   }
 
+  @override
   num get height {
     _refreshTextLineMetrics();
     return _height;
@@ -404,7 +329,7 @@ class RichTextField extends InteractiveObject {
     return lineWidth;
   }
 
-  _refreshTextLineMetrics() {
+  void _refreshTextLineMetrics() {
 
     if ((_refreshPending & 1) == 0) {
       return;
@@ -584,7 +509,7 @@ class RichTextField extends InteractiveObject {
 
   //-------------------------------------------------------------------------------------------------
 
-  _refreshCache(Matrix globalMatrix) {
+  void _refreshCache(Matrix globalMatrix) {
 
     var pixelRatioGlobal = sqrt(globalMatrix.det.abs());
     var pixelRatioCache = _renderTextureQuad?.pixelRatio ?? 0.0;
@@ -616,7 +541,7 @@ class RichTextField extends InteractiveObject {
 
   //-------------------------------------------------------------------------------------------------
 
-  _renderText(CanvasRenderingContext2D context) {
+  void _renderText(CanvasRenderingContext2D context) {
 
     context
       ..save()
@@ -708,10 +633,4 @@ class RichTextField extends InteractiveObject {
     context.restore();
   }
 
-   //-------------------------------------------------------------------------------------------------
-
-  _onMouseDown(MouseEvent mouseEvent) {
-    //use this for simple "did user click on this textfield" logic
-
-  }
 }

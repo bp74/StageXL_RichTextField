@@ -47,9 +47,9 @@ CanvasGradient _getCanvasGradient(CanvasRenderingContext2D context, GraphicsGrad
 
   CanvasGradient canvasGradient;
 
-  if (gradient.kind == "linear") {
+  if (gradient.type == GraphicsGradientType.Linear) {
     canvasGradient = context.createLinearGradient(sx, sy, ex, ey);
-  } else if (gradient.kind == "radial") {
+  } else if (gradient.type == GraphicsGradientType.Radial) {
     canvasGradient = context.createRadialGradient(sx, sy, sr, ex, ey, er);
   } else {
     throw new ArgumentError("Unknown gradient kind");
