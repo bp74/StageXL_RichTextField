@@ -345,8 +345,8 @@ class RichTextField extends InteractiveObject {
     var startIndex = 0;
     var checkLine = '';
     var validLine = '';
-    var lineWidth = 0;
-    var lineIndent = 0;
+    var lineWidth = 0.0;
+    var lineIndent = 0.0;
 
     RichTextFormat firstFormat = _textFormats[0];
     num strokeWidth = _ensureNum(defaultTextFormat.strokeWidth);
@@ -388,12 +388,12 @@ class RichTextField extends InteractiveObject {
               _textLineMetrics.add(new RichTextLineMetrics._internal(checkLine, startIndex));
               startIndex += checkLine.length + 1;
               checkLine = null;
-              lineIndent = 0;
+              lineIndent = 0.0;
             } else {
               _textLineMetrics.add(new RichTextLineMetrics._internal(validLine, startIndex));
               startIndex += validLine.length + 1;
               checkLine = word;
-              lineIndent = 0;
+              lineIndent = 0.0;
             }
           }
         }
