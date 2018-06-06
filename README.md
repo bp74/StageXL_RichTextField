@@ -3,6 +3,8 @@ StageXL RichTextField
 
 Rich Text Field add-on package for [StageXL](https://github.com/bp74/StageXL) - allows for multiple format ranges within a given text field.
 
+*NOTE:* as of version 0.10.0-dev, `StageXL_RichTextField` requires a Dart 2 SDK.
+
 [![Build Status](https://travis-ci.org/bp74/StageXL_RichTextField.svg?branch=master)](https://travis-ci.org/bp74/StageXL_RichTextField)
 
 Usage
