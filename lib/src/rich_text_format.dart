@@ -32,7 +32,7 @@ class RichTextFormat {
     this.endIndex     : -1,
     this.strokeWidth  : 0.0,
     this.strokeColor  : Color.Black,
-    this.fillGradient : null,
+    this.fillGradient,
     this.bold         : false,
     this.italic       : false,
     this.underline    : false,
