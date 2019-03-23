@@ -1,5 +1,5 @@
 name: stagexl_richtextfield
-version: 0.3.0
+version: 0.3.0+1
 authors:
 - Alex Gann <k.alexgann@gmail.com>
 - Bernhard Pichler <support@stagexl.org>
@@ -15,6 +15,6 @@ dependencies:
   stagexl: '>=1.4.0 <2.0.0'
 
 dev_dependencies:
-  build_test: ^0.10.3+1
-  build_runner: ^0.10.1
-  build_web_compilers: ^0.4.2+1
+  build_test: any
+  build_runner: any
+  build_web_compilers: any
