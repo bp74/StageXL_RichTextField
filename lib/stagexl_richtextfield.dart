@@ -12,5 +12,5 @@ part 'src/rich_text_line_metrics.dart';
 part 'src/rich_text_parser.dart';
 part 'src/tools.dart';
 
-final CanvasElement _dummyCanvas = new CanvasElement(width: 16, height: 16);
+final CanvasElement _dummyCanvas = CanvasElement(width: 16, height: 16);
 final CanvasRenderingContext2D _dummyCanvasContext = _dummyCanvas.context2D;

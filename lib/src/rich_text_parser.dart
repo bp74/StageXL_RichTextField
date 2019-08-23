@@ -5,25 +5,26 @@ abstract class RichTextParser {
 }
 
 class DefaultRichTextParser extends RichTextParser {
-
   @override
   String parse(RichTextField richTextField, String rawtext) {
-
     String action = '';
     String newtext = '';
     String arg = '';
     int pos = 0;
 
-    List<List<Object>> formatRanges = new List<List<Object>>();
+    List<List<Object>> formatRanges = List<List<Object>>();
     List<String> split = rawtext.split('{');
 
-    for(var chunk in split) {
+    for (var chunk in split) {
       List actText = chunk.split('}');
-      if (actText.length == 1) { //text prior to first tag
+      if (actText.length == 1) {
+        //text prior to first tag
         newtext = newtext + actText[0];
-      } else { //get action
+      } else {
+        //get action
         action = actText[0];
-        if (!action.startsWith('/')) { //opening a range
+        if (!action.startsWith('/')) {
+          //opening a range
           //check for argument
           if (action.contains('=')) {
             var actArg = action.split('=');
@@ -31,7 +32,8 @@ class DefaultRichTextParser extends RichTextParser {
             arg = actArg[1];
           }
           formatRanges.add([action, arg, pos, -1]); //second+ appearance
-        } else { //closing a range
+        } else {
+          //closing a range
           action = action.substring(1);
           formatRanges.lastWhere((e) => e[3] == -1)[3] =
               pos - 1; //get last unclosed range for that action
@@ -86,7 +88,6 @@ class DefaultRichTextParser extends RichTextParser {
   }
 
   num _applyTextTagArg(String arg, base) {
-
     num result = 0;
 
     if ('+-*/'.contains(arg.substring(0, 1))) {

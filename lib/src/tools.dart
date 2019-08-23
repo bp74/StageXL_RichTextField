@@ -2,8 +2,8 @@ part of stagexl_richtextfield;
 
 int _colorGetA(int color) => (color >> 24) & 0xFF;
 int _colorGetR(int color) => (color >> 16) & 0xFF;
-int _colorGetG(int color) => (color >>  8) & 0xFF;
-int _colorGetB(int color) => (color      ) & 0xFF;
+int _colorGetG(int color) => (color >> 8) & 0xFF;
+int _colorGetB(int color) => (color) & 0xFF;
 
 String _color2rgb(int color) {
   int r = _colorGetR(color);
@@ -24,7 +24,7 @@ num _ensureNum(num value) {
   if (value is num) {
     return value;
   } else {
-    throw new ArgumentError("The supplied value ($value) is not a number.");
+    throw ArgumentError("The supplied value ($value) is not a number.");
   }
 }
 
@@ -32,12 +32,11 @@ String _ensureString(String value) {
   if (value is String) {
     return value;
   } else {
-    throw new ArgumentError("The supplied value ($value) is not a string.");
+    throw ArgumentError("The supplied value ($value) is not a string.");
   }
 }
 
 CanvasGradient _getCanvasGradient(CanvasRenderingContext2D context, GraphicsGradient gradient) {
-
   var sx = gradient.startX;
   var sy = gradient.startY;
   var sr = gradient.startRadius;
@@ -52,7 +51,7 @@ CanvasGradient _getCanvasGradient(CanvasRenderingContext2D context, GraphicsGrad
   } else if (gradient.type == GraphicsGradientType.Radial) {
     canvasGradient = context.createRadialGradient(sx, sy, sr, ex, ey, er);
   } else {
-    throw new ArgumentError("Unknown gradient kind");
+    throw ArgumentError("Unknown gradient kind");
   }
 
   for (var colorStop in gradient.colorStops) {
@@ -63,4 +62,3 @@ CanvasGradient _getCanvasGradient(CanvasRenderingContext2D context, GraphicsGrad
 
   return canvasGradient;
 }
-

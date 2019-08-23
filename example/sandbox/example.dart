@@ -3,16 +3,15 @@ import 'package:stagexl/stagexl.dart';
 import 'package:stagexl_richtextfield/stagexl_richtextfield.dart';
 
 void main() {
-
   CanvasElement canvas = querySelector("#richtext");
   TextAreaElement textarea = querySelector('#texttodraw');
   ButtonElement reload = querySelector('#reload');
 
-  Stage stage = new Stage(canvas);
-  RenderLoop render = new RenderLoop();
+  Stage stage = Stage(canvas);
+  RenderLoop render = RenderLoop();
 
-  RichTextFormat format = new RichTextFormat(
-      'Calibri, sans-serif', 25, 0x000000, align: TextFormatAlign.LEFT);
+  RichTextFormat format =
+      RichTextFormat('Calibri, sans-serif', 25, 0x000000, align: TextFormatAlign.LEFT);
 
   RichTextFormat excited = format.clone()
     ..bold = true
@@ -20,7 +19,7 @@ void main() {
     ..size = 30
     ..color = 0xFF00FF;
 
-  RichTextField rtf = new RichTextField('', format)
+  RichTextField rtf = RichTextField('', format)
     ..presets['excited'] = excited
     ..text = textarea.value
     ..width = stage.sourceWidth
@@ -33,5 +32,4 @@ void main() {
   reload.onClick.listen((e) {
     rtf.text = textarea.value;
   });
-
 }
