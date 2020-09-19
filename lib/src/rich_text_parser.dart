@@ -7,13 +7,13 @@ abstract class RichTextParser {
 class DefaultRichTextParser extends RichTextParser {
   @override
   String parse(RichTextField richTextField, String rawtext) {
-    String action = '';
-    String newtext = '';
-    String arg = '';
-    int pos = 0;
+    var action = '';
+    var newtext = '';
+    var arg = '';
+    var pos = 0;
 
-    List<List<Object>> formatRanges = List<List<Object>>();
-    List<String> split = rawtext.split('{');
+    var formatRanges = <List<Object>>[];
+    var split = rawtext.split('{');
 
     for (var chunk in split) {
       List actText = chunk.split('}');
@@ -91,8 +91,10 @@ class DefaultRichTextParser extends RichTextParser {
     num result = 0;
 
     if ('+-*/'.contains(arg.substring(0, 1))) {
-      String op = arg.substring(0, 1);
-      result = arg.contains('x') ? int.parse(arg.substring(1)) : double.parse(arg.substring(1));
+      var op = arg.substring(0, 1);
+      result = arg.contains('x')
+          ? int.parse(arg.substring(1))
+          : double.parse(arg.substring(1));
       switch (op) {
         case '+':
           result = base + result;

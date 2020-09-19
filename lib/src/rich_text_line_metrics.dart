@@ -1,16 +1,24 @@
 part of stagexl_richtextfield;
 
 class RichTextLineMetrics {
-  String _text;
-  int _textIndex;
+  final String _text;
+  final int _textIndex;
 
+  // ignore: prefer_final_fields
   num _x = 0.0;
-  num _y = 0.0; // relative to baseline
+  // ignore: prefer_final_fields
+  num _y = 0.0;
+  // ignore: prefer_final_fields
   num _width = 0.0;
+  // ignore: prefer_final_fields
   num _height = 0.0;
+  // ignore: prefer_final_fields
   num _ascent = 0.0;
+  // ignore: prefer_final_fields
   num _descent = 0.0;
+  // ignore: prefer_final_fields
   num _leading = 0.0;
+  // ignore: prefer_final_fields
   num _indent = 0.0;
 
   RichTextLineMetrics._internal(this._text, this._textIndex);

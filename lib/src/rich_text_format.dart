@@ -37,7 +37,7 @@ class RichTextFormat {
       this.underline = false,
       this.strikethrough = false,
       this.overline = false,
-      this.align = "left",
+      this.align = 'left',
       this.topMargin = 0.0,
       this.bottomMargin = 0.0,
       this.leftMargin = 0.0,
@@ -71,9 +71,9 @@ class RichTextFormat {
   //-------------------------------------------------------------------------------------------------
 
   String get _cssFontStyle {
-    var fontStyle = "${size}px ${font}, sans-serif";
-    if (bold) fontStyle = "bold $fontStyle";
-    if (italic) fontStyle = "italic $fontStyle";
+    var fontStyle = '${size}px ${font}, sans-serif';
+    if (bold) fontStyle = 'bold $fontStyle';
+    if (italic) fontStyle = 'italic $fontStyle';
     return fontStyle;
   }
 }
